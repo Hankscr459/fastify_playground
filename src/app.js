@@ -11,14 +11,6 @@ const app = fastify({ logger: true })
 app.register(cors)
 app.register(usersRoutes, { prefix: 'api/users' })
 
-//@Routes
-// app.get('/', async (request, reply) => {
-//     reply.send({message: 'hello'})
-// })
-
-// app.get('/bye', async (request, reply) => {
-//     reply.send({message: 'goobye'})
-// })
 
 
 const POST = process.env.PORT || 5000

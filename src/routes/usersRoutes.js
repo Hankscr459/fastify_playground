@@ -1,11 +1,16 @@
-// const { Hello } = require('../controller/user')
+const { Hello, testMiddle } = require('../controller/user')
 
-const routes  = async (fastify, options) => {
-    fastify.get('/', function (request, reply) {
-        reply.send({ message: 'Hello' })
-    })
+const mid = {
+    beforeHandler: function (request, reply, done) {
+     
+      console.log('This is a test middleware.');
+      done()
+    }
+  };
 
-    // fastify.get('/', Hello)
+const routes  = async (fastify, opts) => {
+
+    fastify.get('/', mid, Hello)
 }
 
 module.exports = routes

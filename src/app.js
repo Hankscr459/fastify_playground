@@ -9,6 +9,7 @@ dotenv.config()
 const app = fastify({ logger: true })
 
 app.register(cors)
+app.register(require('middie'))
 app.register(usersRoutes, { prefix: 'api/users' })
 
 

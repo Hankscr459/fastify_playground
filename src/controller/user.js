@@ -1,10 +1,15 @@
+const Hello = async (req, res) => {
+    
+    res.send({ message:'Hello world' })
+}
 
-const Hello = async (reply) => {
-    // res.status(200).send({message: 'Hello world'})
-    console.log('Hello')
-    reply.send({status:"200",message:'Hello world'})
+const testMiddle = async (req, res, next) => {
+
+    console.log('This is a test middleware.')
+    next()
 }
 
 module.exports = {
-    Hello
+    Hello,
+    testMiddle
 }

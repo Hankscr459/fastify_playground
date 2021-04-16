@@ -7,6 +7,6 @@ const midd2 = async (req, res, next) => {
 }
 
 module.exports = {
-    midd1,
-    midd2
+  midd1,
+  midd2
 }

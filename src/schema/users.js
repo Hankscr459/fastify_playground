@@ -13,8 +13,8 @@ const HelloSchema = {
         201: {
         type: 'object',
         properties: {
-            message: { type: 'string' }
-        }
+                message: { type: 'string' }
+            }
         }
     }
 }

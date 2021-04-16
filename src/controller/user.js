@@ -5,8 +5,8 @@ const Hello = async (req, res) => {
 }
 
 const getAllUser = async (req, res) => {
-    // Try to use aggrrgate
-    const result = await User.aggregate([{ "$project": { "_id": 0 } }]).exec((err, user) =>{
+    // Try to use aggregate
+    const result = await User.aggregate([{ "$project": { "name": 1, "role": 1 } }]).exec((err, user) => {
         res.code(201).send(user)
     })
 
@@ -15,7 +15,18 @@ const getAllUser = async (req, res) => {
     
 }
 
+
+const filterPoint = async (req, res) => {
+    // Try to use aggregate
+    const result = await User.aggregate([{ "$match": { bonusPoint: { "$gte": 500 }} }]).exec((err, user) => {
+        res.code(201).send(user)
+    })
+    
+}
+
+
 module.exports = {
     Hello,
-    getAllUser
+    getAllUser,
+    filterPoint
 }

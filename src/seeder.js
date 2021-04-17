@@ -1,7 +1,7 @@
-const dotenv = require('dotenv')
-const users = require('./data/users')
-const User = require('./models/user')
-const { connectDB } = require('./config/db.js')
+import dotenv from'dotenv'
+import users from'./data/users'
+import User from'./models/user'
+import connectDB from'./config/db.js'
 
 dotenv.config()
 

@@ -1,4 +1,4 @@
-const User = require('../models/user')
+import User from '../models/user.js'
 
 const Hello = async (req, res) => {
     res.code(201).send({ message:'Hello world' })
@@ -7,7 +7,11 @@ const Hello = async (req, res) => {
 const getAllUser = async (req, res) => {
     // Try to use aggregate
     const result = await User.aggregate([{ "$project": { "name": 1, "role": 1 } }]).exec((err, user) => {
-        res.code(201).send(user)
+        try {
+            res.code(201).send(user)
+        } catch (err) {
+            res.code(404).send(err)
+        }
     })
 
     // const result = await User.find()
@@ -19,13 +23,17 @@ const getAllUser = async (req, res) => {
 const filterPoint = async (req, res) => {
     // Try to use aggregate
     const result = await User.aggregate([{ "$match": { bonusPoint: { "$gte": 500 }} }]).exec((err, user) => {
-        res.code(201).send(user)
+        try {
+            res.code(201).send(user)
+        } catch (err) {
+            res.code(404).send(err)
+        }
     })
     
 }
 
 
-module.exports = {
+export  {
     Hello,
     getAllUser,
     filterPoint

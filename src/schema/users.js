@@ -19,6 +19,6 @@ const HelloSchema = {
     }
 }
 
-module.exports = {
+export {
     HelloSchema
 }

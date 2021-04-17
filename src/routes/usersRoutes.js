@@ -1,20 +1,20 @@
-const { 
+import { 
   Hello,
   getAllUser,
   filterPoint
-} = require('../controller/user')
+} from '../controller/user.js'
 
-const { HelloSchema } = require('../schema/users')
+import { HelloSchema } from '../schema/users.js'
 
-const { 
+import { 
   midd1,
   midd2
-} = require('../middleware/helper')
+} from '../middleware/helper.js'
 
-const routes  = async (fastify, opts) => {
+const usersRoutes   = async (fastify, opts) => {
   fastify.get('/', { schema: HelloSchema, preHandler: [midd1, midd2]}, Hello)
   fastify.get('/all', getAllUser)
   fastify.get('/point', filterPoint)
 }
 
-module.exports = routes
+export default  usersRoutes 

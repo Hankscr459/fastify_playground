@@ -1,8 +1,9 @@
-const fastify = require('fastify')  
-const dotenv = require('dotenv') 
-const cors = require('fastify-cors') 
-const { connectDB } = require('./config/db')
-const usersRoutes = require('./routes/usersRoutes') 
+import fastify from 'fastify'
+import dotenv from 'dotenv'
+import cors from 'fastify-cors'
+import { connectDB } from './config/db.js'
+import usersRoutes from './routes/usersRoutes.js'
+
 
 dotenv.config()
 connectDB()
@@ -10,8 +11,9 @@ connectDB()
 const app = fastify({ logger: true })
 
 app.register(cors)
-app.register(require('middie'))
+app.register(import('middie'))
 app.register(usersRoutes, { prefix: 'api/users' })
+
 
 
 const POST = process.env.PORT || 5000

@@ -11,10 +11,10 @@ import {
   midd2
 } from '../middleware/helper.js'
 
-const usersRoutes   = async (fastify, opts) => {
+const routes   = async (fastify, opts) => {
   fastify.get('/', { schema: HelloSchema, preHandler: [midd1, midd2]}, Hello)
   fastify.get('/all', getAllUser)
   fastify.get('/point', filterPoint)
 }
 
-export default  usersRoutes 
+export default  routes 

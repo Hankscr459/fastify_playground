@@ -25,6 +25,11 @@ const userSchema = new mongoose.Schema({
         required: true,
         default: 0
     },
+    assets: {
+        type: Number,
+        required: true,
+        default: 0
+    },
     history: {
         type: Array,
         default: []

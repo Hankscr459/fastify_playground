@@ -38,6 +38,9 @@ const importData = async () => {
 
 const destoryData = async () => {
     try {
+        
+        await Category.deleteMany()
+        await Product.deleteMany()
         await User.deleteMany()
 
         console.log('Data Destoryed!')

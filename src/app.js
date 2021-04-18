@@ -3,7 +3,7 @@ import dotenv from 'dotenv'
 import cors from 'fastify-cors'
 import { connectDB } from './config/db.js'
 import usersRoutes from './routes/usersRoutes.js'
-import productsRoutes from './routes/usersRoutes.js'
+import productsRoutes from './routes/productsRoutes.js'
 
 
 dotenv.config()
@@ -14,7 +14,7 @@ const app = fastify({ logger: true })
 app.register(cors)
 app.register(import('middie'))
 app.register(usersRoutes, { prefix: 'api/users' })
-app.register(productsRoutes, { prefix: 'api/productsRoutes' })
+app.register(productsRoutes, { prefix: 'api/products' })
 
 
 

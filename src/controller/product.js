@@ -23,7 +23,7 @@ const getProducts = async (req, res) => {
     ? {
         name: {
             $regex: req.query.keyboard,
-            $option: 'i'
+            $options: 'i'
         }
     } : {}
 

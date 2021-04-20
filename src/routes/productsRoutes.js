@@ -13,4 +13,4 @@ const routes = async (fastify, opts) => {
   fastify.post('/getFilterProducts', { schema: getFilterProductsSchema }, getFilterProducts)
 }
   
-  export default  routes 
+export default  routes 

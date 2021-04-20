@@ -4,6 +4,8 @@ import cors from 'fastify-cors'
 import { connectDB } from './config/db.js'
 import usersRoutes from './routes/usersRoutes.js'
 import productsRoutes from './routes/productsRoutes.js'
+import photoRoutes from './routes/photoRoutes.js'
+import multer from 'fastify-multer'
 
 
 dotenv.config()
@@ -12,10 +14,11 @@ connectDB()
 const app = fastify({ logger: true })
 
 app.register(cors)
+app.register(multer.contentParser)
 app.register(import('middie'))
 app.register(usersRoutes, { prefix: 'api/users' })
 app.register(productsRoutes, { prefix: 'api/products' })
-
+app.register(photoRoutes, { prefix: 'api/photos' })
 
 
 const POST = process.env.PORT || 5000

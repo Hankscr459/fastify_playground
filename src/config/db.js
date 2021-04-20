@@ -2,7 +2,6 @@ import mongoose from 'mongoose'
 import('../models/userModel.js')
 import('../models/categoryModel.js')
 import('../models/productModel.js')
-import('../models/photoModel.js')
 
 const connectDB = async () => {
     try {

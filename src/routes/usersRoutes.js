@@ -1,5 +1,6 @@
 import { 
   Hello,
+  registerUser,
   getAllUser,
   filterPoint
 } from '../controller/user.js'
@@ -14,6 +15,7 @@ import {
 const routes   = async (fastify, opts) => {
   fastify.get('/', { schema: HelloSchema, preHandler: [midd1, midd2]}, Hello)
   fastify.get('/all', getAllUser)
+  fastify.post('/signup', registerUser)
   fastify.get('/point', filterPoint)
 }
 

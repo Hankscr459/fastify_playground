@@ -1,7 +1,38 @@
 import User from '../models/userModel.js'
+import  generateToken  from '../utlis/generateToken.js'
 
 const Hello = async (req, res) => {
     res.code(201).send({ message:'Hello world' })
+}
+
+
+const registerUser = async (req, res) => {
+    const { name, email, password } = req.body
+    
+    const userExists = await User.findOne({ name })
+
+    if(userExists) {
+        res.code(400)
+        throw new Error('User already exists')
+    }
+    const user = await User.create({
+        name,
+        email,
+        password
+    })
+
+    if (user) {
+        res.code(201).send({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            role: user.role,
+            token: generateToken(user._id)
+        })
+    } else {
+        res.code(400)
+        throw new Error('Invalid user data')
+    }
 }
 
 const getAllUser = async (req, res) => {
@@ -18,6 +49,37 @@ const getAllUser = async (req, res) => {
     // res.code(201).send(user)
     
 }
+
+const filterPoint = async (req, res) => {
+
+    const result = await User.aggregate([
+        { "$project": {
+                "hsitory": {
+                    "$filter": {
+                        "input": "$history",
+                        "as": "history",
+                        "cond": { "$gte": [ "$$history.totalprice", 1000 ] }
+                    }
+                }
+            } 
+        }
+    ]).exec((err, user) => {
+        try {
+            res.code(201).send(user)
+        } catch (err) {
+            res.code(404).send(err)
+        }
+    })
+}
+
+
+export  {
+    Hello,
+    registerUser,
+    getAllUser,
+    filterPoint
+}
+
 
 
 // const filterPoint = async (req, res) => {
@@ -117,33 +179,3 @@ const getAllUser = async (req, res) => {
 //         }
 //     })
 // }
-
-
-const filterPoint = async (req, res) => {
-
-    const result = await User.aggregate([
-        { "$project": {
-                "hsitory": {
-                    "$filter": {
-                        "input": "$history",
-                        "as": "history",
-                        "cond": { "$gte": [ "$$history.totalprice", 1000 ] }
-                    }
-                }
-            } 
-        }
-    ]).exec((err, user) => {
-        try {
-            res.code(201).send(user)
-        } catch (err) {
-            res.code(404).send(err)
-        }
-    })
-}
-
-
-export  {
-    Hello,
-    getAllUser,
-    filterPoint
-}

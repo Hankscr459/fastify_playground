@@ -1,4 +1,6 @@
-import { upload } from '../controller/photo.js'
+import { 
+    upload
+} from '../controller/photo.js'
 
 const routes = async (fastify, opts) => {
 

@@ -2,15 +2,26 @@ import multer from 'fastify-multer'
 import path from 'path'
 
 const storage = multer.diskStorage({
-    destination: function (req, file, cb) {
-      cb(null, 'src/uploads/')
+    destination: async (req, file, cb) => {
+      await cb(null, 'src/uploads/')
     },
-    filename: function (req, file, cb) {
-      cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
+    filename: async (req, file, cb) => {
+      await cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
     }
 })
 
-const upload = multer({ storage: storage })
+const uploadFilter = (req, file, cb) => {
+    const ext = path.extname(file.originalname)
+
+    if (ext == '.jpg' || ext == '.png' || ext == '.jepg') {
+        cb(null, true)
+    }
+    cb(null,  false)
+    
+}
+
+const upload = multer({ storage: storage, fileFilter: uploadFilter })
+
 
 export {
     upload

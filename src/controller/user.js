@@ -5,6 +5,24 @@ const Hello = async (req, res) => {
     res.code(201).send({ message:'Hello world' })
 }
 
+const authUser = async (req, res) => {
+    const { email, password } = req.body
+    
+    const user = await User.findOne({ email })
+
+    if(user && (await user.matchPassword(password))) {
+        res.code(201).send({
+            _id: user._id,
+            name: user.name,
+            email: user.email,
+            isAdmin: user.isAdmin,
+            token: generateToken({_id: user._id, name: user.name, role: user.role})
+        })
+    } else {
+        res.code(401)
+        throw new Error('Invalid email or password')
+    }
+}
 
 const registerUser = async (req, res) => {
     const { name, email, password } = req.body
@@ -27,7 +45,7 @@ const registerUser = async (req, res) => {
             name: user.name,
             email: user.email,
             role: user.role,
-            token: generateToken(user._id)
+            token: generateToken({_id: user._id, name: user.name, role: user.role})
         })
     } else {
         res.code(400)
@@ -48,6 +66,10 @@ const getAllUser = async (req, res) => {
     // const result = await User.find()
     // res.code(201).send(user)
     
+}
+
+const secret = async (req, res) => {
+    res.code(201).send({message: 'Success to access secret page!'})
 }
 
 const filterPoint = async (req, res) => {
@@ -76,6 +98,8 @@ const filterPoint = async (req, res) => {
 export  {
     Hello,
     registerUser,
+    authUser,
+    secret,
     getAllUser,
     filterPoint
 }

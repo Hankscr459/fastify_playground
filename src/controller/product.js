@@ -151,10 +151,46 @@ const getProductsWithAggregate = async (req, res) => {
     const count = await Product.countDocuments({...keyboard})
     const totalPages = Math.ceil(count / pageSize)
 
-    const pipeline = []
+    const pipeline = [
+        { $skip: (currentPage - 1) * pageSize },{ $limit: pageSize }
+    ]
 
-    req.query.keyboard ? pipeline.push({ $match: { name: { $regex: `${req.query.keyboard}` } }},{ $skip: (currentPage - 1) * pageSize },{ $limit: pageSize }) :
-    pipeline.push({ $skip: (currentPage - 1) * pageSize },{ $limit: pageSize }) 
+    req.query.keyboard ? pipeline.push({ $match: { name: { $regex: `${req.query.keyboard}` } }}) : null
+
+    const products = await Product.aggregate(pipeline)
+
+    if (products) {
+        res.code(201).send({products, currentPage, totalPages, count})
+    } else {
+        res.code(400)
+        throw new Error('Invalid user data')
+    }
+
+}
+
+const ProductsWithAggregateLookup = async (req, res) => {
+    const pageSize = 3
+    let currentPage = Number(req.query.pageNumber) || 1
+
+    const keyboard = req.query.keyboard
+    ? {
+        name: {
+            $regex: req.query.keyboard,
+            $options: 'i'
+        }
+    } : {}
+
+    const count = await Product.countDocuments({...keyboard})
+    const totalPages = Math.ceil(count / pageSize)
+
+    const pipeline = [
+        { $skip: (currentPage - 1) * pageSize },{ $limit: pageSize },
+        { $lookup: { from: "categories", localField: "category", foreignField: '_id', as: "cat"} },
+        { $project: { "cat._id": false } }
+    ]
+
+
+    req.query.keyboard ? pipeline.push({ $match: { name: { $regex: `${req.query.keyboard}` } }}) : null
 
     const products = await Product.aggregate(pipeline)
 
@@ -170,5 +206,6 @@ const getProductsWithAggregate = async (req, res) => {
 export {
     getProducts,
     getFilterProducts,
-    getProductsWithAggregate
+    getProductsWithAggregate,
+    ProductsWithAggregateLookup
 }

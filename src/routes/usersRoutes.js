@@ -29,7 +29,7 @@ const routes = async (fastify, opts) => {
   fastify.get('/point', filterPoint)
   fastify.put('/forgot-password', forgotPassword)
   fastify.put("/reset-password", resetPassword)
-  fastify.get("/email", email)
+  fastify.get('/email', email)
 }
 
 export default  routes

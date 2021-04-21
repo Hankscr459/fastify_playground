@@ -151,7 +151,7 @@ const getProductsWithAggregate = async (req, res) => {
     const count = await Product.countDocuments({...keyboard})
     const totalPages = Math.ceil(count / pageSize)
 
-    const pipeline = [
+    let pipeline = [
         { $skip: (currentPage - 1) * pageSize },{ $limit: pageSize }
     ]
 
@@ -169,6 +169,12 @@ const getProductsWithAggregate = async (req, res) => {
 }
 
 const ProductsWithAggregateLookup = async (req, res) => {
+
+    const sort = req.query.sortBy ? req.query.sortBy : "priceOrderByasc"
+    const parts = sort.split('OrderBy')
+
+    // let sort = `${parts[0]}`
+
     const pageSize = 3
     let currentPage = Number(req.query.pageNumber) || 1
 
@@ -183,7 +189,9 @@ const ProductsWithAggregateLookup = async (req, res) => {
     const count = await Product.countDocuments({...keyboard})
     const totalPages = Math.ceil(count / pageSize)
 
-    const pipeline = [
+    let pipeline = [
+        // { $match: { price: { $lte: 200 } } },
+        { $sort: { price: -1 } },
         { $skip: (currentPage - 1) * pageSize },{ $limit: pageSize },
         { $lookup: { from: "categories", localField: "category", foreignField: '_id', as: "cat"} },
         { $project: { "cat._id": false } }
@@ -203,9 +211,26 @@ const ProductsWithAggregateLookup = async (req, res) => {
 
 }
 
+const listRelated = async (req, res) => {
+    let limit = req.body.limit ? parseInt(req.body.limit) : 3
+    const {_id, category} = req.body.product
+
+    await Product.find({_id: {$ne: _id}, category: {$in:category}})
+    .limit(limit)
+    .exec((err, products) => {
+        if(err) {
+            return res.code(400).send({
+                error: 'Product not found'
+            })
+        }
+        res.send(products)
+    })
+}
+
 export {
     getProducts,
     getFilterProducts,
     getProductsWithAggregate,
-    ProductsWithAggregateLookup
+    ProductsWithAggregateLookup,
+    listRelated
 }

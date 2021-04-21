@@ -2,7 +2,8 @@ import {
   getProducts,
   getFilterProducts,
   getProductsWithAggregate,
-  ProductsWithAggregateLookup
+  ProductsWithAggregateLookup,
+  listRelated
 } from '../controller/product.js'
 
 import {
@@ -15,6 +16,7 @@ const routes = async (fastify, opts) => {
   fastify.post('/getFilterProducts', { schema: getFilterProductsSchema }, getFilterProducts)
   fastify.get('/getProductsWithaggregate', getProductsWithAggregate)
   fastify.get('/ProductsWithAggregateLookup', ProductsWithAggregateLookup)
+  fastify.post('/listRelated', listRelated)
 }
   
 export default  routes 

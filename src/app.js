@@ -19,7 +19,7 @@ app.register(cors)
 
 const __dirname = path.resolve()
 app.register(fastifyStatic, {
-    root: path.join(__dirname, 'uploads')
+    root: path.join(__dirname, 'public')
 })
 
 app.register(multer.contentParser)

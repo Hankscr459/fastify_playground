@@ -4,6 +4,8 @@ import {
   registerUser,
   secret,
   getAllUser,
+  forgotPassword,
+  resetPassword,
   filterPoint
 } from '../controller/user.js'
 
@@ -16,13 +18,16 @@ import {
 
 import { protect } from '../middleware/authorMiddleware.js'
 
-const routes   = async (fastify, opts) => {
-  fastify.get('/', { schema: HelloSchema, preHandler: [midd1, midd2]}, Hello)
+const routes = async (fastify, opts) => {
+  fastify.get('/',  (req, res) => res.send({ message: 'This is a user page' }))
+  fastify.get('/hello', { schema: HelloSchema, preHandler: [midd1, midd2]}, Hello)
   fastify.get('/all', getAllUser)
   fastify.post('/signup', registerUser)
   fastify.post('/signin', authUser)
   fastify.get('/secret',  { preHandler: [protect]}, secret)
   fastify.get('/point', filterPoint)
+  fastify.put('/forgot-password', forgotPassword)
+  fastify.put("/reset-password", resetPassword)
 }
 
 export default  routes

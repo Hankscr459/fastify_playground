@@ -33,6 +33,10 @@ const userSchema = new mongoose.Schema({
     history: {
         type: Array,
         default: []
+    },
+    resetPasswordLink: {
+        data: String,
+        default: ""
     }
 }, {
     timestamps: true

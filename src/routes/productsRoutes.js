@@ -1,5 +1,6 @@
 import { 
   getProducts,
+  getProductById,
   getFilterProducts,
   getProductsWithAggregate,
   ProductsWithAggregateLookup,
@@ -17,6 +18,7 @@ const routes = async (fastify, opts) => {
   fastify.get('/getProductsWithaggregate', getProductsWithAggregate)
   fastify.get('/ProductsWithAggregateLookup', ProductsWithAggregateLookup)
   fastify.post('/listRelated', listRelated)
+  fastify.get('/:id', getProductById)
 }
   
 export default  routes 

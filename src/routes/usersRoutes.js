@@ -28,7 +28,7 @@ const routes = async (fastify, opts) => {
   fastify.get('/secret',  { preHandler: [protect]}, secret)
   fastify.get('/point', filterPoint)
   fastify.put('/forgot-password', forgotPassword)
-  fastify.put("/reset-password", resetPassword)
+  fastify.put('/reset-password', resetPassword)
   fastify.get('/email', email)
 }
 

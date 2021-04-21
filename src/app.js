@@ -6,6 +6,8 @@ import usersRoutes from './routes/usersRoutes.js'
 import productsRoutes from './routes/productsRoutes.js'
 import photoRoutes from './routes/photoRoutes.js'
 import multer from 'fastify-multer'
+import fastifyStatic from 'fastify-static'
+import path from 'path'
 
 
 dotenv.config()
@@ -14,6 +16,12 @@ connectDB()
 const app = fastify({ logger: true })
 
 app.register(cors)
+
+const __dirname = path.resolve()
+app.register(fastifyStatic, {
+    root: path.join(__dirname, 'uploads')
+})
+
 app.register(multer.contentParser)
 app.register(import('middie'))
 app.register(usersRoutes, { prefix: 'api/users' })

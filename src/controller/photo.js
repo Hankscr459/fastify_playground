@@ -2,36 +2,34 @@ import multer from 'fastify-multer'
 import path from 'path'
 
 const storage = multer.diskStorage({
-    destination: async (req, file, cb) => {
-      await cb(null, 'src/uploads/')
-    },
-    filename: async (req, file, cb) => {
-      await cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname))
-    }
+  destination(req, file, cb) {
+      cb(null, 'public/uploads/')
+  },
+  filename(req, file, cb) {
+      cb(null, `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`)
+  }
 })
 
-const uploadFilter = (req, file, cb) => {
-    const ext = path.extname(file.originalname)
+function checkFileType(file, cb) {
+  const filetypes = /jpg|jpeg|png/
+  const extname = filetypes.test(path.extname(file.originalname).toLowerCase())
+  const mimetype = filetypes.test(file.mimetype)
 
-    if (ext == '.jpg' || ext == '.png' || ext == '.jepg') {
-        cb(null, true)
-    }
-    cb(null,  false)
-    
+  if(extname && mimetype) {
+      return cb(null, true)
+  } else {
+      cb('Images only!')
+  }
 }
 
-const upload = multer({ storage: storage, fileFilter: uploadFilter })
+const upload = multer({
+  storage,
+  fileFilter: function(req, file, cb) {
+      checkFileType(file, cb)
+  }
+})
 
 
 export {
     upload
 }
-
-// const fileFilter = (req, file, cb) => {
-//     const ext = path.extname(file.originalname)
-//     console.log(typeof ext)
-//     if (ext !== '.jpg' || ext !== '.png' || ext !== '.jepg') {
-//         return cb(new Error('only jpg, png are allowed'), false)
-//     }
-//     cb(null, true)
-// }

@@ -6,7 +6,8 @@ import {
   getAllUser,
   forgotPassword,
   resetPassword,
-  filterPoint
+  filterPoint,
+  email
 } from '../controller/user.js'
 
 import { HelloSchema } from '../schema/users.js'
@@ -28,6 +29,7 @@ const routes = async (fastify, opts) => {
   fastify.get('/point', filterPoint)
   fastify.put('/forgot-password', forgotPassword)
   fastify.put("/reset-password", resetPassword)
+  fastify.get("/email", email)
 }
 
 export default  routes

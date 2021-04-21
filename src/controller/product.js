@@ -136,8 +136,39 @@ const getFilterProducts = async (req, res) => {
     
 }
 
+const getProductsWithAggregate = async (req, res) => {
+    const pageSize = 3
+    let currentPage = Number(req.query.pageNumber) || 1
+
+    const keyboard = req.query.keyboard
+    ? {
+        name: {
+            $regex: req.query.keyboard,
+            $options: 'i'
+        }
+    } : {}
+
+    const count = await Product.countDocuments({...keyboard})
+    const totalPages = Math.ceil(count / pageSize)
+
+    const pipeline = []
+
+    req.query.keyboard ? pipeline.push({ $match: { name: { $regex: `${req.query.keyboard}` } }},{ $skip: (currentPage - 1) * pageSize },{ $limit: pageSize }) :
+    pipeline.push({ $skip: (currentPage - 1) * pageSize },{ $limit: pageSize }) 
+
+    const products = await Product.aggregate(pipeline)
+
+    if (products) {
+        res.code(201).send({products, currentPage, totalPages, count})
+    } else {
+        res.code(400)
+        throw new Error('Invalid user data')
+    }
+
+}
 
 export {
     getProducts,
-    getFilterProducts
+    getFilterProducts,
+    getProductsWithAggregate
 }

@@ -78,25 +78,63 @@ const secret = async (req, res) => {
 
 const filterPoint = async (req, res) => {
 
-    const result = await User.aggregate([
-        { "$project": {
-                "hsitory": {
-                    "$filter": {
-                        "input": "$history",
-                        "as": "history",
-                        "cond": { "$gte": [ "$$history.totalprice", 1000 ] }
-                    }
-                }
-            } 
-        }
-    ]).exec((err, user) => {
-        try {
-            res.code(201).send(user)
-        } catch (err) {
-            res.code(404).send(err)
-        }
-    })
+  const result = await User.aggregate([
+    { 
+      $project: {
+        history: 1,
+        "total": {
+            $sum: {
+              $map: {
+                input: {
+                  $filter: {
+                    input: "$history",
+                    as: "s",
+                    cond: { $gte: [ "$$s.totalprice", 1000 ] }
+                  },
+                },
+                as: 'el',
+                in: '$$el.totalprice'
+              }
+            }
+        },
+      },
+    },
+    { 
+      $group: {
+        _id: "$keyboard",
+        totalPrice: { $sum: "$total" }   // sum
+      } 
+    },
+  ]).exec((err, user) => {
+      try {
+          res.code(201).send(user[0])
+      } catch (err) {
+          res.code(404).send(err)
+      }
+  })
 }
+
+// const filterPoint = async (req, res) => {
+
+//     const result = await User.aggregate([
+//         { "$project": {
+//                 "hsitory": {
+//                     "$filter": {
+//                         "input": "$history",
+//                         "as": "history",
+//                         "cond": { "$gte": [ "$$history.totalprice", 1000 ] }
+//                     }
+//                 }
+//             } 
+//         }
+//     ]).exec((err, user) => {
+//         try {
+//             res.code(201).send(user)
+//         } catch (err) {
+//             res.code(404).send(err)
+//         }
+//     })
+// }
 
 const forgotPassword = async (req, res) => {
         const { email } = req.body
@@ -236,13 +274,26 @@ export  {
 // const filterPoint = async (req, res) => {
 
 //     const result = await User.aggregate([
-//         { "$match": { bonusPoint: { "$gte": 500 }} },   // bonuspoint must be at least 500 
-//         { "$group": {
-//              "_id": "$keyboard",
-//              "average": { "$avg": "$bonusPoint" }, // average bonuspoint
-//              "sum": { "$sum": "$bonusPoint" }   // sum
-//             } 
+//       {
+//         $project: {
+//           history: 1,
+//           "price": {
+//             $sum: {
+//               $map: {
+//                 input: "$history",
+//                 as: 'el',
+//                 in: '$$el.totalprice'
+//               }
+//             }//216070
+//           }  
 //         }
+//       },
+//       { 
+//         $group: {
+//           _id: "$keyboard",
+//           totalPrice: { $sum: "$price" }
+//         }
+//       }
 //     ]).exec((err, user) => {
 //         try {
 //             res.code(201).send(user)
